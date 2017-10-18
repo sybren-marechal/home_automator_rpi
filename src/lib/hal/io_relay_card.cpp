@@ -31,7 +31,7 @@ namespace BiosHomeAutomator {
   void IORelayCard::update_inputs(void) {
     unsigned int data = ioExpander.read_port();
     for (unsigned int i = 0; i < NUMBER_OF_INPUTS; i++) {
-      inputs[i]->set_current_state(determine_input_state(data, inputs[i]->id));
+      inputs[i]->set_current_state(determine_input_state(data, inputs[i]->get_id()));
     }
   }
 
@@ -47,7 +47,7 @@ namespace BiosHomeAutomator {
     update_inputs();
     std::vector<Input*> changed;
     for (unsigned int i = 0; i < NUMBER_OF_INPUTS; i++) {
-      if (inputs[i]->hasChanged) {
+      if (inputs[i]->has_changed()) {
         changed.push_back(inputs[i]);
       }
     }
