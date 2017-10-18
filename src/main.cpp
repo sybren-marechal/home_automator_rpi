@@ -1,6 +1,7 @@
 #include <iostream>
 #include <unistd.h>
 #include "lib/home_automator/home_automator.h"
+#include "lib/logger/log.h"
 
 using namespace std;
 using namespace BiosHomeAutomator;
@@ -14,7 +15,9 @@ void relay_card_interrupt_handler(void) {
 }
 
 int main(void) {
-  cout << "Starting Home Automator ..." << endl;
+  FILELog::ReportingLevel() = FILELog::FromString("VERBOSE");
+
+  FILE_LOG(logINFO) << "Starting Home Automator ...";
   automator = new HomeAutomator();
   automator->add_card(new IORelayCard(0x20, 1));
 

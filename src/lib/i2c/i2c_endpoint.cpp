@@ -5,6 +5,7 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>          //O_RDWR
 #include <unistd.h>         // Read and write
+#include "../logger/log.h"
 
 namespace BiosHomeAutomator {
 
@@ -33,13 +34,13 @@ namespace BiosHomeAutomator {
 
   bool I2cEndpoint::open(void) {
     if ((fileHandle = file_open(filename.c_str(), O_RDWR)) < 0) {
-        std::cout << "Failed to open the I2c bus." << std::endl;
-        return false;
+      FILE_LOG(logERROR) << "Failed to open the I2c bus.";
+      return false;
     }
 
     if (ioctl(fileHandle, I2C_SLAVE, address) < 0) {
-        std::cout << "Failed to acquire bus access and/or talk to slave.n" << std::endl;
-        return false;
+      FILE_LOG(logERROR) << "Failed to acquire bus access and/or talk to slave";
+      return false;
     }
 
     return true;

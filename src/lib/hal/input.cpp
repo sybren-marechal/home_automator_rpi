@@ -47,9 +47,9 @@ namespace BiosHomeAutomator {
     std::stringstream ss;
     ss << "Input " << id << " is " << (currentState == INPUT_LOW ? "LOW" : "HIGH");
     if (hasChanged) {
-      ss << "\r\n\tchanged from " << (previousState == INPUT_LOW ? "LOW" : "HIGH");
-      ss << " = " << (stateChange == RISING ? "RISING" : "FALLING");
-      ss << "\r\n\t" << millisecondsSincePreviousEvent << "ms since last event";
+      ss << " changed from " << (previousState == INPUT_LOW ? "LOW" : "HIGH");
+      ss << " => " << (stateChange == RISING ? "RISING" : "FALLING");
+      ss << " (" << millisecondsSincePreviousEvent << "ms since last event)";
     }
     return ss.str();
   }

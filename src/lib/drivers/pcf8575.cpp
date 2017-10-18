@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <unistd.h>   // For usleep
+#include "../logger/log.h"
 
 namespace BiosHomeAutomator {
 
@@ -9,7 +10,7 @@ namespace BiosHomeAutomator {
     : i2cEndpoint(address, filename) {
 
     if (!i2cEndpoint.open()) {    // Later exception here
-      std::cout << "Failed to open device";
+      FILE_LOG(logERROR) << "Failed to open device " << filename << " with address = " << address;
     } else {
       set_all_as_inputs();
       write_port(0xFFFF);
@@ -20,7 +21,7 @@ namespace BiosHomeAutomator {
   unsigned int PCF8575::read_port(void) {
     char buffer[2];
     if (!i2cEndpoint.read(buffer, sizeof(buffer))) {
-      std::cout << "Read failed" << std::endl;
+      FILE_LOG(logWARNING) << "Read failed for pcf8575";
     };
     return ((buffer[1] << 8) | buffer[0]);
   }
@@ -33,7 +34,7 @@ namespace BiosHomeAutomator {
     buffer[0] = output;
     buffer[1] = (output >> 8);
     if (!i2cEndpoint.write(buffer, sizeof(buffer))) {
-      std::cout << "Write failed" << std::endl;
+      FILE_LOG(logWARNING) << "Write failed for pcf8575";
     };
   }
 
