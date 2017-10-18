@@ -35,7 +35,8 @@ int main(void) {
 
 	relayCard = new IORelayCard(0x20, 1);
 
-  if (wiringPiISR (BUTTON_PIN, INT_EDGE_BOTH, &relayCardInputChanged) < 0) {
+  // Interrupt of io expander is falling edge
+  if (wiringPiISR (BUTTON_PIN, INT_EDGE_FALLING, &relayCardInputChanged) < 0) {
 			std::cout << "Unable to setup ISR" << std::endl;
       return 1;
   }
@@ -45,6 +46,5 @@ int main(void) {
   }
 
 	delete relayCard;
-
   return 0;
 }
