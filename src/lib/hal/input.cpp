@@ -4,7 +4,8 @@
 
 namespace BiosHomeAutomator {
 
-  Input::Input(unsigned int id, InputState currentState) {
+  Input::Input(ExpansionCard * parent, unsigned int id, InputState currentState) {
+    this->parent = parent;
     this->id = id;
     this->previousState = this->currentState = currentState;
     hasChanged = false;
@@ -20,6 +21,10 @@ namespace BiosHomeAutomator {
     hasChanged = (this->previousState != this->currentState);
     update_timing();
     update_state_change();
+  }
+
+  ExpansionCard * Input::get_parent(void) {
+    return parent;
   }
 
   unsigned int Input::get_id(void) {

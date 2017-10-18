@@ -16,7 +16,7 @@ namespace BiosHomeAutomator {
   void IORelayCard::initialize_inputs(void) {
     unsigned int data = ioExpander.read_port();
     for (unsigned int i = 0; i < NUMBER_OF_INPUTS; i++) {
-      Input * input = new Input(i, determine_input_state(data, i));
+      Input * input = new Input(this, i, determine_input_state(data, i));
       inputs.push_back(input);
     }
   }

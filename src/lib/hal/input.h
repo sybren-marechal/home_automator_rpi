@@ -1,7 +1,8 @@
 #pragma once
 
-#include <sstream>
 #include <sys/time.h>
+#include <string>
+#include "expansion_card.h"
 
 namespace BiosHomeAutomator {
 
@@ -15,6 +16,7 @@ namespace BiosHomeAutomator {
 
   class Input {
     private:
+      ExpansionCard * parent;
       unsigned int id;
       InputState currentState;
       InputState previousState;
@@ -25,9 +27,10 @@ namespace BiosHomeAutomator {
       unsigned long millisecondsSincePreviousEvent;
 
     public:
-      Input(unsigned int id, InputState currentState);
+      Input(ExpansionCard * parent, unsigned int id, InputState currentState);
 
     public:
+      ExpansionCard * get_parent(void);
       unsigned int get_id(void);
       bool has_changed(void);
       unsigned long get_ms_since_previous_event(void);
