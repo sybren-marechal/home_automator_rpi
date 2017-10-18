@@ -4,13 +4,16 @@
 #include <vector>
 #include <wiringPi.h>
 #include "../logger/log.h"
+#include "../factories/mqtt_message_factory.h"
 
 #define BUTTON_PIN 1
 extern void relay_card_interrupt_handler(void);
 
 namespace BiosHomeAutomator {
 
-  HomeAutomator::HomeAutomator(void) {
+  HomeAutomator::HomeAutomator(MQTTChannel * mqttChannel) {
+    this->mqttChannel = mqttChannel;
+
     if (wiringPiSetup () < 0) {
       // Should throw exception
       FILE_LOG(logERROR) << "Unable to setup wiringPi";
@@ -47,6 +50,11 @@ namespace BiosHomeAutomator {
       std::vector<Input*> inputs = relayCards[i]->get_changed_inputs();
       for (unsigned int i = 0; i < inputs.size(); i++) {
         FILE_LOG(logVERBOSE) << inputs[i]->to_string();
+
+        mqtt::message_ptr message = MQTTMessageFactory::create_input_state_update(inputs[i]);
+        if (message) {
+          mqttChannel->publish(message);
+        }
       }
     }
   }
