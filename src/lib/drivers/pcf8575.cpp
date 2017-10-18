@@ -13,7 +13,7 @@ namespace BiosHomeAutomator {
     } else {
       set_all_as_inputs();
       write_port(0xFFFF);
-      usleep(100000);
+      // usleep(100000);      // Needed or not?
     }
   }
 
