@@ -25,7 +25,7 @@ int main(void) {
   mqttChannel->connect();
 
   automator = new HomeAutomator(mqttChannel);
-  automator->add_card(new IORelayCard(0x20, 1));
+  automator->add_card(new IORelayCard(0x20, 0));
 
   FILE_LOG(logINFO) << "All ready for action ...";
 
