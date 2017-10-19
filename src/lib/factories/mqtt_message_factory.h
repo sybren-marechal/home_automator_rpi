@@ -12,7 +12,7 @@ namespace BiosHomeAutomator {
     public:
       static mqtt::message_ptr create_input_state_update(Input * input) {
         std::stringstream ss;
-        ss << "test/home/cards/" << input->get_parent()->get_id()
+        ss << "home/cards/" << input->get_parent()->get_id()
           << "/inputs/" << input->get_id();
 
         std::string topic = ss.str();

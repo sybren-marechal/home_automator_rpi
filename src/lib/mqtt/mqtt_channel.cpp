@@ -11,22 +11,22 @@ namespace BiosHomeAutomator {
   	connectionOptions.set_keep_alive_interval(20);
   	connectionOptions.set_clean_session(true);
 
-    callback = new Callback();
+    callback = new Callback(client, connectionOptions);
     client.set_callback(*callback);
   }
 
   void MQTTChannel::connect(void) {
   	try {
   		FILE_LOG(logINFO) << "Connecting to the MQTT server ...";
-  		mqtt::token_ptr connectionToken = client.connect(connectionOptions);
-  		FILE_LOG(logINFO) << "Waiting for the MQTT connection ...";
-  		connectionToken->wait();
+  		client.connect(connectionOptions, nullptr, *callback)->wait();
   		FILE_LOG(logINFO) << "MQTT Connection ready ...";
 
       // Create thread for publishing
       FILE_LOG(logINFO) << "Creating publisher thread ...";
       keepPublishing = true;
       publisherThread = std::thread(&MQTTChannel::publishing_thread, this);
+
+      subscribe();
   	}
   	catch (const mqtt::exception&) {
   		FILE_LOG(logERROR) << "Unable to connect to the MQTT server";
@@ -65,6 +65,16 @@ namespace BiosHomeAutomator {
   		mqtt::delivery_token_ptr pubtok = client.publish(msg, nullptr, listener);
   		pubtok->wait();
     }
+  }
+
+  void MQTTChannel::subscribe(void) {
+    std::string topic = "home/cards/+/relays/+/set";
+		FILE_LOG(logINFO) << "Subscribing to topic '" << topic << "' using QoS" << QOS;
+		client.subscribe(topic, QOS, nullptr, subscriptionListener);
+  }
+
+  void MQTTChannel::register_message_processor(IMQTTMessageProcessor * processor) {
+    callback->register_message_processor(processor);
   }
 
 };
