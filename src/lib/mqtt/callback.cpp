@@ -1,5 +1,5 @@
 #include "callback.h"
-#include "../logger/log.h"
+#include <bios_logger/logger.h>
 // #include <iostream>
 // #include <cstdlib>
 // #include <string>
@@ -28,16 +28,16 @@ namespace BiosHomeAutomator {
 			client.connect(connectionOptions, nullptr, *this);
 		}
 		catch (const mqtt::exception& exc) {
-			FILE_LOG(logERROR) << "MQTT Client connection error: " << exc.what();
+      BiosLogger::DoLog.error("MQTT Client connection error: " + std::string(exc.what()));
 			exit(1);
 		}
 	}
 
 	// Re-connection failure
 	void Callback::on_failure(const mqtt::token& tok) {
-		FILE_LOG(logWARNING) << "Connection to mqtt broker failed";
+    BiosLogger::DoLog.warning("Connection to mqtt broker failed");
 		if (++numberOfConnectionRetries > N_RETRY_ATTEMPTS) {
-      FILE_LOG(logERROR) << "Could not connect with broker";
+      BiosLogger::DoLog.error("Could not connect with broker");
 			exit(1);
     }
 		reconnect();
@@ -45,32 +45,32 @@ namespace BiosHomeAutomator {
 
 	// Re-connection success
 	void Callback::on_success(const mqtt::token& tok) {
-		FILE_LOG(logINFO) << "Connection to mqtt broker success";
+    BiosLogger::DoLog.info("Connection to mqtt broker success");
 	}
 
 	// Callback for when the connection is lost.
 	// This will initiate the attempt to manually reconnect.
 	void Callback::connection_lost(const std::string& cause) {
-		FILE_LOG(logWARNING) << "Connection to mqtt broker lost";
+    BiosLogger::DoLog.warning("Connection to mqtt broker lost");
 		if (!cause.empty()) {
-			FILE_LOG(logWARNING) << "\tcause: " << cause;
+      BiosLogger::DoLog.warning("\tcause: " + cause);
     }
 
-		FILE_LOG(logWARNING) << "Reconnecting to mqtt broker ...";
+    BiosLogger::DoLog.warning("Reconnecting to mqtt broker ...");
 		numberOfConnectionRetries = 0;
 		reconnect();
 	}
 
 	// Callback for when a message arrives.
 	void Callback::message_arrived(mqtt::const_message_ptr msg) {
-		FILE_LOG(logVERBOSE) << "Message arrived with "
-		  << "topic: '" << msg->get_topic() << "'"
-  		<< " and payload: '" << msg->to_string() << "'";
+    BiosLogger::DoLog.verbose("Message arrived with topic: '"
+      + std::string(msg->get_topic()) + "' and payload: '"
+      + msg->to_string() + "'");
 
     if (processor) {
       processor->process_incoming_message(msg);
     } else {
-      FILE_LOG(logWARNING) << "No message processor registered";
+      BiosLogger::DoLog.warning("No message processor registered");
     }
 	}
 

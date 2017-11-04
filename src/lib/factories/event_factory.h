@@ -1,6 +1,7 @@
 #pragma once
 
-#include <sstream>
+#include <string>
+#include <bios_logger/logger.h>
 #include "../helpers/string_splitter.h"
 #include "../home_automator/events/relay_event.h"
 
@@ -29,12 +30,12 @@ namespace BiosHomeAutomator {
           } else if (payload == "TOGGLE") {
             eventType = TOGGLE;
           } else {
-            FILE_LOG(logWARNING) << "Unknown event type in MQTT message: " << payload;
+            BiosLogger::DoLog.warning("Unknown event type in MQTT message: " + payload);
             return nullptr;
           }
           event = new RelayEvent(cardId, relayId, eventType);
         } else {
-          FILE_LOG(logWARNING) << "Missing event topic parts in MQTT message: " << topic;
+          BiosLogger::DoLog.warning("Missing event topic parts in MQTT message: " + topic);
         }
 
         return event;

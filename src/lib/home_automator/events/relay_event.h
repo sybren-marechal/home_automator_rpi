@@ -2,6 +2,7 @@
 
 #include "event.h"
 #include "../../hal/io_relay_card.h"
+#include <bios_logger/logger.h>
 
 namespace BiosHomeAutomator {
 
@@ -39,7 +40,7 @@ namespace BiosHomeAutomator {
               break;
           }
         } else {
-          FILE_LOG(logWARNING) << "Trying to apply event on wrong expansion card";
+          BiosLogger::DoLog.warning("Trying to apply event on wrong expansion card");
         }
       }
 
