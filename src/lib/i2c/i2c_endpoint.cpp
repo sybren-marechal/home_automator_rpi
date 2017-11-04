@@ -1,11 +1,10 @@
 #include "i2c_endpoint.h"
 
-#include <iostream>
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>          //O_RDWR
 #include <unistd.h>         // Read and write
-#include "../logger/log.h"
+#include <bios_logger/logger.h>
 
 namespace BiosHomeAutomator {
 
@@ -34,12 +33,12 @@ namespace BiosHomeAutomator {
 
   bool I2cEndpoint::open(void) {
     if ((fileHandle = file_open(filename.c_str(), O_RDWR)) < 0) {
-      FILE_LOG(logERROR) << "Failed to open the I2c bus.";
+      BiosLogger::DoLog.error("Failed to open the I2c bus " + filename);
       return false;
     }
 
     if (ioctl(fileHandle, I2C_SLAVE, address) < 0) {
-      FILE_LOG(logERROR) << "Failed to acquire bus access and/or talk to slave";
+      BiosLogger::DoLog.error("Failed to acquire bus access and/or talk to slave " + std::to_string(address));
       return false;
     }
 

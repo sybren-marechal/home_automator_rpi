@@ -1,9 +1,8 @@
 #include "home_automator.h"
 
-#include <iostream>
 #include <vector>
 #include <wiringPi.h>
-#include "../logger/log.h"
+#include <bios_logger/logger.h>
 #include "../factories/mqtt_message_factory.h"
 #include "../factories/event_factory.h"
 
@@ -18,13 +17,13 @@ namespace BiosHomeAutomator {
 
     if (wiringPiSetup () < 0) {
       // Should throw exception
-      FILE_LOG(logERROR) << "Unable to setup wiringPi";
+      BiosLogger::DoLog.error("Unable to setup wiringPi");
       return;
     }
 
     // Interrupt of io expander is falling edge
     if (wiringPiISR (BUTTON_PIN, INT_EDGE_FALLING, relay_card_interrupt_handler) < 0) {
-      FILE_LOG(logERROR) << "Unable to setup ISR";
+      BiosLogger::DoLog.error("Unable to setup ISR");
       return;
     }
   }
@@ -39,7 +38,7 @@ namespace BiosHomeAutomator {
   void HomeAutomator::add_card(IORelayCard * relayCard) {
     for (unsigned int i = 0; i < relayCards.size(); i++) {
       if (relayCards[i]->get_id() == relayCard->get_id()) {
-        FILE_LOG(logWARNING) << "FAIL: ID for expansion card already taken";
+        BiosLogger::DoLog.warning("ID for expansion card already taken");
         return;
       }
     }
@@ -51,7 +50,7 @@ namespace BiosHomeAutomator {
     for (unsigned int i = 0; i < relayCards.size(); i++) {
       std::vector<Input*> inputs = relayCards[i]->get_changed_inputs();
       for (unsigned int i = 0; i < inputs.size(); i++) {
-        FILE_LOG(logVERBOSE) << inputs[i]->to_string();
+        BiosLogger::DoLog.verbose(inputs[i]->to_string());
 
         mqtt::message_ptr message = MQTTMessageFactory::create_input_state_update(inputs[i]);
         if (message) {

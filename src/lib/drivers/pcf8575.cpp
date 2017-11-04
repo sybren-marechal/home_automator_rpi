@@ -1,8 +1,7 @@
 #include "pcf8575.h"
 
-#include <iostream>
-#include <unistd.h>   // For usleep
-#include "../logger/log.h"
+#include <string>
+#include <bios_logger/logger.h>
 
 namespace BiosHomeAutomator {
 
@@ -10,18 +9,17 @@ namespace BiosHomeAutomator {
     : i2cEndpoint(address, filename) {
 
     if (!i2cEndpoint.open()) {    // Later exception here
-      FILE_LOG(logERROR) << "Failed to open device " << filename << " with address = " << address;
+      BiosLogger::DoLog.error("Failed to open i2c endpoint on bus " + filename + " with address " + std::to_string(address));
     } else {
       set_all_as_inputs();
       write_port(0xFFFF);
-      // usleep(100000);      // Needed or not?
     }
   }
 
   unsigned int PCF8575::read_port(void) {
     char buffer[2];
     if (!i2cEndpoint.read(buffer, sizeof(buffer))) {
-      FILE_LOG(logWARNING) << "Read failed for pcf8575";
+      BiosLogger::DoLog.warning("Failed to read from PCF8575");
     };
     return ((buffer[1] << 8) | buffer[0]);
   }
@@ -34,7 +32,7 @@ namespace BiosHomeAutomator {
     buffer[0] = output;
     buffer[1] = (output >> 8);
     if (!i2cEndpoint.write(buffer, sizeof(buffer))) {
-      FILE_LOG(logWARNING) << "Write failed for pcf8575";
+      BiosLogger::DoLog.warning("Failed to write to PCF8575");
     };
   }
 
