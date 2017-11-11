@@ -53,4 +53,4 @@ docker build --no-cache -t home_automator .
 
 ## running
 
-docker run -d --privileged home_automator
+docker run -d --privileged --restart unless-stopped --name automator home_automator

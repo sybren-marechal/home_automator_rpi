@@ -1,56 +1,33 @@
 #pragma once
 
-#include <string>
-#include <mqtt/async_client.h>
+#include <simple_mqtt_client/simple_mqtt_client.h>
 #include "../multithread/safe_queue.h"
-#include "listeners/subscribe_action_listener.h"
-#include "i_mqtt_message_processor.h"
 
 namespace BiosHomeAutomator {
 
-  class MQTTChannel : public virtual mqtt::callback,
-  					public virtual mqtt::iaction_listener {
-    private:
-      const int	QOS = 1;
-      const int	N_RETRY_ATTEMPTS = 10;
+  class MQTTChannel {
 
     private:
-    	mqtt::async_client client;
-      mqtt::connect_options connectionOptions;
-      SubscribeActionListener subscriptionListener;
-    	int numberOfConnectionRetries;
-      IMQTTMessageProcessor * processor;
+      BiosSimpleMqttClient::SimpleMQTTClient simpleClient;
 
       // Threading stuff
       bool keepPublishing;
       std::thread publisherThread;
-      SafeQueue<mqtt::message_ptr> queue;
+      SafeQueue<BiosSimpleMqttClient::MQTTMessage> queue;
       bool isPublisherThreadRunning;    // should be atomic actually
 
     public:
       MQTTChannel(std::string serverAddress, std::string clientId);
+      virtual ~MQTTChannel(void);
 
     public:
-      void connect(void);
-      void disconnect(void);
-      void register_message_processor(IMQTTMessageProcessor * processor);
-
-    public:
-      void publish(mqtt::message_ptr message);
+      void publish(BiosSimpleMqttClient::MQTTMessage message);
+      void subscribe(std::string topic, BiosSimpleMqttClient::IMQTTMessageHandler * handler);
 
     private:
+      void start_publishing_thread(void);
+      void stop_publishing_thread(void);
       void publishing_thread(void);
-      void subscribe(void);
-
-    public:
-    	void on_failure(const mqtt::token& tok) override;
-    	void on_success(const mqtt::token& tok) override;
-    	void connection_lost(const std::string& cause) override;
-    	void message_arrived(mqtt::const_message_ptr msg) override;
-    	void delivery_complete(mqtt::delivery_token_ptr token) override;
-
-    private:
-    	void reconnect();
 
   };
 

@@ -2,13 +2,13 @@
 
 #include <vector>
 #include "../hal/io_relay_card.h"
-#include "../mqtt/mqtt_channel.h"
-#include "../mqtt/i_mqtt_message_processor.h"
 #include "events/event.h"
+#include "../mqtt/mqtt_channel.h"
+#include <simple_mqtt_client/simple_mqtt_client.h>
 
 namespace BiosHomeAutomator {
 
-  class HomeAutomator : public IMQTTMessageProcessor {
+  class HomeAutomator : public BiosSimpleMqttClient::IMQTTMessageHandler {
 
     private:
       std::vector<IORelayCard *> relayCards;
@@ -23,7 +23,7 @@ namespace BiosHomeAutomator {
       void process_changed_inputs(void);
 
     public:
-      void process_incoming_message(mqtt::const_message_ptr message) override;
+      void handle_mqtt_message(BiosSimpleMqttClient::MQTTMessage mqttMessage) override;
 
     private:
       void process_event(Event * event);

@@ -10,7 +10,7 @@ CFLAGS=-c -Wall -std=c++11
 # LDFLAGS=
 
 # Libraries
-LIBS=-lpaho-mqttpp3 -lpaho-mqtt3a -lwiringPi -lpthread -lbioslogger
+LIBS=-lpaho-mqttpp3 -lpaho-mqtt3a -lwiringPi -lpthread -lbioslogger -lsimple_mqtt_client
 
 # Name of executable output
 TARGET=home_automator

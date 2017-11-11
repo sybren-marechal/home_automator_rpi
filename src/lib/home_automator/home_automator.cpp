@@ -13,7 +13,7 @@ namespace BiosHomeAutomator {
 
   HomeAutomator::HomeAutomator(MQTTChannel * mqttChannel) {
     this->mqttChannel = mqttChannel;
-    this->mqttChannel->register_message_processor(this);
+    this->mqttChannel->subscribe("home/cards/+/relays/+/set", this);
 
     if (wiringPiSetup () < 0) {
       // Should throw exception
@@ -52,16 +52,17 @@ namespace BiosHomeAutomator {
       for (unsigned int i = 0; i < inputs.size(); i++) {
         BiosLogger::DoLog.verbose(inputs[i]->to_string());
 
-        mqtt::message_ptr message = MQTTMessageFactory::create_input_state_update(inputs[i]);
+        BiosSimpleMqttClient::MQTTMessage * message = MQTTMessageFactory::create_input_state_update(inputs[i]);
         if (message) {
-          mqttChannel->publish(message);
+          mqttChannel->publish(*message);
+          delete message;
         }
       }
     }
   }
 
-  void HomeAutomator::process_incoming_message(mqtt::const_message_ptr message) {
-    Event * event = EventFactory::create_event_from_mqtt_message(message);
+  void HomeAutomator::handle_mqtt_message(BiosSimpleMqttClient::MQTTMessage mqttMessage) {
+    Event * event = EventFactory::create_event_from_mqtt_message(mqttMessage);
     if (event) {
       process_event(event);
     }

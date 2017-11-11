@@ -13,6 +13,7 @@ const std::string MQTT_CLIENT_ID		    { "sdfasdt54654hg4fh5334543" };
 const std::string REST_LOGGER_HOST		  { "10.0.0.100" };
 const int REST_LOGGER_PORT              = 3000;
 const std::string REST_LOGGER_AUTH_KEY  { "rwfdh4e2" };
+const std::string VERSION               { "version 1.1.0" };
 
 // Don't know how to fix this yet
 HomeAutomator * automator;
@@ -26,9 +27,9 @@ int main(void) {
   DoLog.register_log_writer(new RemoteRestLogWriter(REST_LOGGER_AUTH_KEY, "/messages.json", REST_LOGGER_HOST, REST_LOGGER_PORT, logVERBOSE));
   DoLog.register_log_writer(new TerminalLogWriter(logVERBOSE));
   DoLog.info("Starting Home Automator ...");
+  DoLog.info("Current version: " + VERSION);
 
   MQTTChannel * mqttChannel = new MQTTChannel(MQTT_SERVER_ADDRESS, MQTT_CLIENT_ID);
-  mqttChannel->connect();
 
   automator = new HomeAutomator(mqttChannel);
   automator->add_card(new IORelayCard(0x20, 0));

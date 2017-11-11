@@ -10,9 +10,9 @@ namespace BiosHomeAutomator {
   class EventFactory {
 
     public:
-      static Event * create_event_from_mqtt_message(mqtt::const_message_ptr msg) {
-        std::string topic =  msg->get_topic();
-        std::string payload = msg->to_string();
+      static Event * create_event_from_mqtt_message(BiosSimpleMqttClient::MQTTMessage mqttMessage) {
+        std::string topic =  mqttMessage.get_topic();
+        std::string payload = mqttMessage.get_message();
         std::vector<std::string> topicParts = StringSplitter::split(topic, '/');
         // "home/cards/+/relays/+/set"
 

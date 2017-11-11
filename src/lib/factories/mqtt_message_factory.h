@@ -10,7 +10,7 @@ namespace BiosHomeAutomator {
       const static int QOS = 1;
 
     public:
-      static mqtt::message_ptr create_input_state_update(Input * input) {
+      static BiosSimpleMqttClient::MQTTMessage * create_input_state_update(Input * input) {
         std::stringstream ss;
         ss << "home/cards/" << input->get_parent()->get_id()
           << "/inputs/" << input->get_id();
@@ -31,10 +31,8 @@ namespace BiosHomeAutomator {
         //   return nullptr;
         // }
 
-        mqtt::message_ptr pubmsg = mqtt::make_message(topic, payload);
-        pubmsg->set_qos(QOS);
-
-        return pubmsg;
+        BiosSimpleMqttClient::MQTTMessage * message = new BiosSimpleMqttClient::MQTTMessage(topic, payload);
+        return message;
       }
 
   };
