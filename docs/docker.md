@@ -46,6 +46,11 @@ This will expose all of /dev to your container, and remove other restrictions as
 
 docker build -t home_automator .
 
+or force rebuild
+
+docker build --no-cache -t home_automator .
+
+
 ## running
 
 docker run -d --privileged home_automator

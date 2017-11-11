@@ -57,6 +57,12 @@ RUN cd /usr/local/src && \
     make && \
     make install
 
+RUN cd /usr/local/src && \
+    git clone https://github.com/BioBoost/simple_mqtt_client.git && \
+    cd simple_mqtt_client && \
+    make && \
+    make install
+
 # Copy the main application and compile it
 COPY . ./
 RUN make clean && make
