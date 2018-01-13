@@ -11,7 +11,7 @@ Check out [Installing Docker on the RPi](docs/docker.md) for setting up Docker o
 Clone the git repo on the RPi and build the image
 
 ```shell
-cd && https://github.com/BioBoost/home_automator_rpi.git
+cd && git clone https://github.com/BioBoost/home_automator_rpi.git
 cd home_automator_rpi
 docker build -t home_automator .
 ```
