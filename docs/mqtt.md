@@ -1,8 +1,8 @@
-# Mqtt
+# MQTT
 
 This currently only works on the Pi itself.
 
-## Installing Mqtt development libraries
+## Installing MQTT development libraries
 
 Install dependencies to allow for compilation of mqtt
 
