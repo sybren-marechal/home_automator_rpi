@@ -41,3 +41,21 @@ docker run --privileged myimage
 ```
 
 This will expose all of /dev to your container, and remove other restrictions as well (e.g., you will be able to change the network configuration in the container and mount new filesystems).
+
+## Adding the RPi to Portainer
+
+First edit the docker service
+```shell
+systemctl edit --full docker.service
+```
+
+Modify ExecStart to
+```shell
+ExecStart=/usr/bin/docker daemon -H fd:// -H tcp://0.0.0.0:
+```
+
+Then do a reload
+```shell
+sudo systemctl daemon-reload
+sudo systemctl restart docker.service
+```
