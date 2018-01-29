@@ -27,3 +27,11 @@ By passing the `privileged` we give the docker image access to GPIO and I2C
 ```shell
 docker run -d --privileged --restart unless-stopped --name automator home_automator
 ```
+
+### Development
+
+Attaching a bash shell to a running docker container
+
+```shell
+docker exec -it automator /bin/bash
+```

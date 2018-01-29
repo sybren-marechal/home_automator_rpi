@@ -1,0 +1,20 @@
+{
+  "logging": {
+    "rest_logger": {
+      "ip": "xxxxxxxxxxxxxxxx",
+      "port": 3000,
+      "auth_key": "xxxxxxxxxxx"
+    }
+  },
+  "mqtt": {
+    "server": "tcp://xxxxxxxxxxxxxxxx:1883",
+    "client_id": "xxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  "cards": [
+    {
+      "type": "io_relay_card",
+      "i2c_address": 32,
+      "id": 1
+    }
+  ]
+}

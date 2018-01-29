@@ -24,12 +24,25 @@ void relay_card_interrupt_handler(void) {
 }
 
 int main(void) {
+
+  // Read config from json file
+  std::ifstream inputStream("config.example.json");
+  json jsonConfig;
+  inputStream >> jsonConfig;
+
+  HomeAutomatorConfig config = jsonConfig;
+
+
+  // MQTTConfig * mqttConfig = config->get_mqtt_config();
+
+
   DoLog.register_log_writer(new RemoteRestLogWriter(REST_LOGGER_AUTH_KEY, "/messages.json", REST_LOGGER_HOST, REST_LOGGER_PORT, logVERBOSE));
   DoLog.register_log_writer(new TerminalLogWriter(logVERBOSE));
   DoLog.info("Starting Home Automator ...");
   DoLog.info("Current version: " + VERSION);
 
-  MQTTChannel * mqttChannel = new MQTTChannel(MQTT_SERVER_ADDRESS, MQTT_CLIENT_ID);
+  // MQTTChannel * mqttChannel = new MQTTChannel(MQTT_SERVER_ADDRESS, MQTT_CLIENT_ID);
+  MQTTChannel * mqttChannel = new MQTTChannel(config.get_mqtt_config().get_server(), config.get_mqtt_config().get_client_id());
 
   automator = new HomeAutomator(mqttChannel);
   automator->add_card(new IORelayCard(0x20, 0));
