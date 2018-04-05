@@ -12,7 +12,7 @@ namespace BiosHomeAutomator {
       HomeAutomatorConfig(void);
 
     public:
-      MQTTConfig get_mqtt_config(void);
+      MQTTConfig get_mqtt_config(void) const;
       void set_mqtt_config(MQTTConfig config);
   };
 

@@ -3,6 +3,11 @@
 #include <bios_logger/logger.h>
 #include <bios_logger/writers/terminal_log_writer.h>
 #include <bios_logger/writers/remote_rest_log_writer.h>
+#include <nlohmann/json.hpp>
+#include <fstream>
+#include "lib/config/mqtt_config.h"
+#include "lib/config/home_automator_config.h"
+#include "lib/config/json/to_from_json.h"
 
 using namespace std;
 using namespace BiosHomeAutomator;
@@ -26,32 +31,33 @@ void relay_card_interrupt_handler(void) {
 int main(void) {
 
   // Read config from json file
-  std::ifstream inputStream("config.example.json");
-  json jsonConfig;
+  std::ifstream inputStream("/home/pi/share/home_automator_relay_card_rpi_rebuild/bin/test.json");
+  nlohmann::json jsonConfig;
   inputStream >> jsonConfig;
 
   HomeAutomatorConfig config = jsonConfig;
+  MQTTConfig mqttConfig = config.get_mqtt_config();
+
+  cout << "MQTT Config - server: " << mqttConfig.get_server() << endl;
+  cout << "MQTT Config - clientId: " << mqttConfig.get_client_id() << endl;
 
 
-  // MQTTConfig * mqttConfig = config->get_mqtt_config();
+  // DoLog.register_log_writer(new RemoteRestLogWriter(REST_LOGGER_AUTH_KEY, "/messages.json", REST_LOGGER_HOST, REST_LOGGER_PORT, logVERBOSE));
+  // DoLog.register_log_writer(new TerminalLogWriter(logVERBOSE));
+  // DoLog.info("Starting Home Automator ...");
+  // DoLog.info("Current version: " + VERSION);
 
+  // // MQTTChannel * mqttChannel = new MQTTChannel(MQTT_SERVER_ADDRESS, MQTT_CLIENT_ID);
+  // MQTTChannel * mqttChannel = new MQTTChannel(config.get_mqtt_config().get_server(), config.get_mqtt_config().get_client_id());
 
-  DoLog.register_log_writer(new RemoteRestLogWriter(REST_LOGGER_AUTH_KEY, "/messages.json", REST_LOGGER_HOST, REST_LOGGER_PORT, logVERBOSE));
-  DoLog.register_log_writer(new TerminalLogWriter(logVERBOSE));
-  DoLog.info("Starting Home Automator ...");
-  DoLog.info("Current version: " + VERSION);
+  // automator = new HomeAutomator(mqttChannel);
+  // automator->add_card(new IORelayCard(0x20, 0));
 
-  // MQTTChannel * mqttChannel = new MQTTChannel(MQTT_SERVER_ADDRESS, MQTT_CLIENT_ID);
-  MQTTChannel * mqttChannel = new MQTTChannel(config.get_mqtt_config().get_server(), config.get_mqtt_config().get_client_id());
+  // DoLog.info("All ready for action ...");
 
-  automator = new HomeAutomator(mqttChannel);
-  automator->add_card(new IORelayCard(0x20, 0));
-
-  DoLog.info("All ready for action ...");
-
-  while (true) {
-    sleep(1);
-  }
+  // while (true) {
+  //   sleep(1);
+  // }
 
   return 0;
 }

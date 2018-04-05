@@ -11,12 +11,20 @@ namespace BiosHomeAutomator {
     this->clientId = clientId;
   }
 
-  std::string MQTTConfig::get_server(void) {
+  std::string MQTTConfig::get_server(void) const {
     return this->server;
   }
 
-  std::string MQTTConfig::get_client_id(void) {
+  std::string MQTTConfig::get_client_id(void) const {
     return this->clientId;
+  }
+
+  void MQTTConfig::set_server(std::string server) {
+    this->server = server;
+  }
+
+  void MQTTConfig::set_client_id(std::string clientId) {
+    this->clientId = clientId;
   }
 
 };

@@ -4,7 +4,7 @@ namespace BiosHomeAutomator {
 
   HomeAutomatorConfig::HomeAutomatorConfig(void) {}
 
-  MQTTConfig HomeAutomatorConfig::get_mqtt_config(void) {
+  MQTTConfig HomeAutomatorConfig::get_mqtt_config(void) const {
     return mqttConfig;
   }
 
