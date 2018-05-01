@@ -4,7 +4,6 @@ ENTRYPOINT []
 # Configure the main working directory. This is the base
 # directory used in any further RUN, COPY, and ENTRYPOINT
 # commands.
-RUN mkdir -p /app
 WORKDIR /app
 
 RUN apt-get update && \
@@ -38,7 +37,7 @@ RUN cd /usr/local/src && \
 
 RUN cd /usr/local/src && \
     git clone https://github.com/nlohmann/json.git && \
-    cp json/src/json.hpp /usr/local/include/
+    cp json/single_include/nlohmann/json.hpp /usr/local/include/
 
 RUN cd /usr/local/src && \
     git clone https://github.com/BioBoost/thread_safe.git && \
@@ -64,7 +63,7 @@ RUN cd /usr/local/src && \
     make install
 
 # Copy the main application and compile it
-COPY . ./
+COPY . .
 RUN make clean && make
 
 CMD ./bin/home_automator
